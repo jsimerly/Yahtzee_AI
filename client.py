@@ -18,17 +18,9 @@ class GameClient:
         if self.rolls >= 3:
             print('end of turn')
 
-    def get_user_dice_holds(self):
-        score_now = input()
-        if score_now:
-            self.end_turn()
-        
-        for i in range(5):
-            hold = bool(input())
-            if hold:
-                self.rolling_dice[i] = False
-            else:
-                self.rolling_dice[i] = True
+    def get_user_dice_holds(self): 
+        hold_arr = input()
+        self.rolling_dice = hold_arr  
 
     def end_turn(self):
         self.get_user_scoring_choice()

@@ -1,68 +1,75 @@
 import numpy as np
+from typing import Callable
 
 class ScoreCard:
-    def __init__(self) -> None:       
-        """ Array Choices
-        0: Ace
-        1: Twos
-        2: Threes
-        3: Fours
-        4: Fives
-        5: Sixes
-        6: 3 of a Kind
-        7: 4 of a kind
-        8: Full House
-        9: Sm Straight
-        10: Lg Straight
-        11: Chance
-        12: Yahtzee
-        13: Bonus Yahztee """
-
+    def __init__(self) -> None:   
         self.available = np.array([False for _ in range(14)])
         self.points = np.array([0 for _ in range(14)])
-        self.total = 0
+        self.total = 0    
 
-    def add_score(self, choice: int, points: int) -> bool:
-        if self.available[choice]:
+        self.option_methods: list[Callable] = [
+            self.ace,               #0
+            self.two,               #1
+            self.three,             #2
+            self.four,              #3
+            self.five,              #4
+            self.six,               #5
+            self.three_of_a_kind,   #6
+            self.four_of_a_kind,    #7
+            self.full_house,        #8 
+            self.sm_straight,       #9  
+            self.lg_straight,       #10
+            self.chance,            #11
+            self.yahtzee,           #12    
+        ]
+
+    def add_score(self, choice: int, dice: np.ndarray) -> bool:
+        choice_method = self.option_methods[choice]
+
+        points, updated = choice_method(dice=dice)
+        if not updated:
+            return False
+
+        if self.available[choice] or choice == 12:
             self.available[choice] = False
             self.points[choice] = points
 
             self.total += points
             return True
         return False
-    
+        
     def ace(self, dice: np.ndarray) -> tuple[int, bool]:
         return dice[dice == 1].sum(), True
         
     def two(self, dice: np.ndarray) -> tuple[int, bool]:
-        return dice[dice == 2].sum()
+        return dice[dice == 2].sum(), True
     
     def three(self, dice: np.ndarray) -> tuple[int, bool]:
-        return dice[dice == 3].sum()
+        return dice[dice == 3].sum(), True
     
     def four(self, dice: np.ndarray) -> tuple[int, bool]:
-        return dice[dice == 4].sum()
+        return dice[dice == 4].sum(), True
     
     def five(self, dice: np.ndarray) -> tuple[int, bool]:
-        return dice[dice == 5].sum()
+        return dice[dice == 5].sum(), True
     
     def six(self, dice: np.ndarray) -> tuple[int, bool]:
-        return dice[dice == 6].sum()
+        return dice[dice == 6].sum(), True
     
     def three_of_a_kind(self, dice: np.ndarray) -> tuple[int, bool]:
         counts = np.bincount(dice)
         max_count = np.max(counts)
         if max_count >= 3:
             number = np.argmax(counts)
-            return number * max_count
+            return number * max_count, True
         return None, False
     
-    def three_of_a_kind(self, dice: np.ndarray) -> tuple[int, bool]:
+    def four_of_a_kind(self, dice: np.ndarray) -> tuple[int, bool]:
         counts = np.bincount(dice)
         max_count = np.max(counts)
         if max_count >= 4:
             number = np.argmax(counts)
-            return number * max_count
+            return number * max_count, True
         return None, False
     
     def full_house(self, dice: np.ndarray) -> tuple[int, bool]:
@@ -91,4 +98,7 @@ class ScoreCard:
     def yahtzee(self, dice: np.ndarray) -> tuple[int, bool]:
         if len(np.unique(dice)) != 1:
             return None, False
+        
+        if not self.available[12]:
+            return 100, True
         return 50, True

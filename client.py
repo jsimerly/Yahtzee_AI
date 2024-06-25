@@ -1,11 +1,6 @@
 from scorecard import ScoreCard
 import numpy as np
 
-
-
-    
-
-    
 class GameClient:
     def __init__(self, id: int) -> None:
         self.id = id

@@ -1,5 +1,21 @@
 import numpy as np
 from typing import Callable
+from enum import Enum
+
+class ScoreOptions(Enum):
+    ACE = 0
+    TWO = 1
+    THREE = 2
+    FOUR = 3
+    FIVE = 4
+    SIX = 5
+    THREE_OF_A_KIND = 6
+    FOUR_OF_A_KIND = 7
+    FULL_HOUSE = 8
+    SM_STRAIGHT = 9
+    LG_STRAIGHT = 10
+    CHANCE = 11
+    YAHTZEE = 12
 
 class ScoreCard:
     def __init__(self) -> None:   
@@ -30,7 +46,7 @@ class ScoreCard:
         if not updated:
             return False
 
-        if self.available[choice] or choice == 12:
+        if self.available[choice] or choice == ScoreOptions.YAHTZEE.value:
             self.available[choice] = False
             self.points[choice] = points
 
@@ -99,6 +115,6 @@ class ScoreCard:
         if len(np.unique(dice)) != 1:
             return None, False
         
-        if not self.available[12]:
+        if not self.available[ScoreOptions.YAHTZEE.value]:
             return 100, True
         return 50, True

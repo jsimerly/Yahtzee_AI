@@ -51,8 +51,8 @@ class ScoreCard:
             self.points[choice] = points
 
             self.total += points
-            return True
-        return False
+            return points, True
+        return None, False
         
     def ace(self, dice: np.ndarray) -> tuple[int, bool]:
         return dice[dice == 1].sum(), True

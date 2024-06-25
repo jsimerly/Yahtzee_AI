@@ -31,14 +31,11 @@ class GameClient:
 
     def get_user_scoring_choice(self):
         choice = int(input())
-        updated = self.scorecard.add_score(choice)
+        points, updated = self.scorecard.add_score(choice)
         if not updated:
             self.get_user_scoring_choice()
-            
+
+        return points
+
     def end_game(self):
-        print(self.scorecard.total)
-
-    def calculate_score(self, choice):
-        ...
-
-                   
+        print(self.scorecard.total)                   

@@ -1,7 +1,8 @@
 import torch
 import numpy as np
+from base import YahtzeeModel
 
-class YahtzeeModel(torch.nn.Module):
+class FirstModel(torch.nn.Module, YahtzeeModel):
     def __init__(self, state_dim_dice, action_dim_dice, action_dim_score):
         super(YahtzeeModel, self).__init__()
         self.fc_dice = torch.nn.Linear(state_dim_dice, 128)

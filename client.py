@@ -24,7 +24,25 @@ class GameClient:
         self.rolls = 3
 
         self.dice = np.array([0 for _ in range(5)])
-        self.rolling_dice = np.array([True for _ in range(5)])
+        self.holding_dice = np.array([True for _ in range(5)])
+
+    @property
+    def hold_game_state(self) -> NDArray:
+        return np.concatenate([
+            np.array([self.rounds]),            # round[1]
+            np.array([self.rolls]),             # rolls left[1]
+            self.dice,                          # dice[5]
+            self.holding_dice,                  # holding dice [5]
+            np.array(self.scorecard.points),    # scorcard [13]
+        ])
+
+    @property
+    def score_game_state(self) -> NDArray:
+        return np.concatenate([
+            np.array([self.rounds]),            # round[1]
+            self.dice,                          # dice[5]
+            np.array(self.scorecard.points),    # scorcard [13]
+        ])
 
     def run(self):
         self.active = True
@@ -34,12 +52,16 @@ class GameClient:
     def start_turn(self):
         while self.rolls > 0:
             self.roll()
-            self.get_user_dice_holds()
+            self.hold_step()
         self.end_turn()
 
+    
     #return reward, game_over, score
-    def hold_step(self, hold_arr: NDArray) -> tuple[float, int, float]:
-        ...
+    def hold_step(self):
+        ai_decision = self.model.decide_dice_holds(self.hold_game_state)
+        self.holding_dice = ai_decision
+
+        
 
     def score_step(self, score_selection: int) -> tuple[float, int, float]:
         ... 

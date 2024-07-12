@@ -3,14 +3,19 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..scorecard import ScoreOptions
+    from numpy.typing import NDArray
 
 class YahtzeeModel(ABC):
     @abstractmethod
-    def get_model_dice_holds(self):
+    def decide_dice_holds(self, hold_game_state: NDArray) -> NDArray:
         ...
 
     @abstractmethod
-    def get_model_scoring_choice(self):
+    def decide_scoring(self, scoring_game_state: NDArray) -> int:
+        ...
+
+    @abstractmethod
+    def reward_holds(self) -> int:
         ...
 
     @abstractmethod

@@ -15,5 +15,5 @@ class YahtzeeModel(ABC):
         ...
 
     @abstractmethod
-    def reward_holds(self) -> int:
+    def process_turn(self) -> int:
         ...

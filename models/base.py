@@ -17,11 +17,3 @@ class YahtzeeModel(ABC):
     @abstractmethod
     def reward_holds(self) -> int:
         ...
-
-    @abstractmethod
-    def predict_hold_action(self, state) -> list[bool]:
-        ...
-
-    @abstractmethod
-    def predict_score_action(self, state) -> ScoreOptions.value:
-        ...

@@ -32,18 +32,17 @@ class GameClient:
         self.holding_dice = np.array([True for _ in range(5)])
 
     @property
-    def hold_game_state(self) -> NDArray:
+    def turn_game_state(self) -> NDArray:
         return np_concat(
             self.rounds,                # round[1]
-            self.rolls,                 # rolls left[1]
-            self.dice,                  # dice[5]
-            self.holding_dice,          # holding dice [5]
             self.scorecard.points,      # scorcard [13]
+            self.scorecard.available    # available [13]
         )
     
     @property
-    def turn_game_state(self) -> NDArray:
+    def hold_game_state(self) -> NDArray:
         return np_concat(
+            self.rolls,                 # rolls left[1]
             self.dice,                  # dice[5]
             self.holding_dice,          # holding dice [5]
         )
@@ -58,21 +57,20 @@ class GameClient:
 
     def run(self):
         self.active = True
-        self.turn_context = np_concat(
-            self.rounds,
-            self.score_game_state
-        )
         while self.active:
             self.start_turn()
             
     def start_turn(self):
+        self.turn_actions = np.array([])
+        self.turn_context = np_concat(
+            self.rounds,
+            self.score_game_state
+        )
         while self.rolls > 0:
             self.roll()
             self.hold_step()
         self.end_turn()
 
-    
-    #return reward, game_over, score
     def hold_step(self):
         ai_decision = self.model.decide_dice_holds(self.hold_game_state)
         self.holding_dice = ai_decision
@@ -85,7 +83,7 @@ class GameClient:
         ... 
 
     def roll(self):
-        self.dice = np.where(self.rolling_dice, np.random.randint(1, 7, size=5), self.dice)
+        self.dice[~self.holding_dice] = np.random.randint(1, 7, size=np.sum(~self.holding_dice))
         self.rolls -= 1
 
     def get_user_dice_holds(self): 

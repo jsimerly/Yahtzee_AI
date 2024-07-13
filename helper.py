@@ -1,11 +1,13 @@
 from numpy.typing import NDArray
 import numpy as np
 
-def np_concat(*args: float | int | str | NDArray) -> NDArray:
+def np_concat(*args: float | int | str | list |NDArray) -> NDArray:
     processed_args = []
     for arg in args:
         if isinstance(arg, (int, float, str)):
             processed_args.append(np.array([arg]))
+        elif isinstance(arg, list):
+            processed_args.append(np.array(arg))
         elif isinstance(arg, np.ndarray):
             processed_args.append(arg)
         else:

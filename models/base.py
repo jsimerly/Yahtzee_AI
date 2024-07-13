@@ -15,5 +15,9 @@ class YahtzeeModel(ABC):
         ...
 
     @abstractmethod
-    def process_turn(self) -> int:
+    def train_on_turn(self) -> float:
+        ...
+
+    @abstractmethod
+    def train_on_game(self) -> float:
         ...

@@ -39,6 +39,10 @@ class ScoreCard:
             self.yahtzee,           #12    
         ]
 
+    #TODO we're going to get the legal options instead.
+    def get_legal_options(self, dice: np.ndarray) -> list[int]:
+        ...
+
     def add_score(self, choice: int, dice: np.ndarray) -> bool:
         choice_method = self.option_methods[choice]
 

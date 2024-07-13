@@ -82,7 +82,7 @@ class FirstModel(nn.Module, YahtzeeModel):
         hold_decisions_tensor = torch.FloatTensor(np.array(hold_decisions))
         
         hold_probs = self.forward_hold(states_tensor)
-        hold_loss = self.hold_loss_fn(hold_probs, hold_decisions_tensor) * -final_score
+        hold_loss = self.hold_loss_fn(hold_probs, hold_decisions_tensor) * -final_scores
 
         score_predictions = self.forward_score(states_tensor)
         target_scores = torch.zeros_like(score_predictions)

@@ -53,7 +53,7 @@ class GameClient:
     def run(self):
         self._active = True
         self.reset_game()
-        
+ 
         while self._active:
             self.start_turn()
             
@@ -84,6 +84,7 @@ class GameClient:
 
         self.holding_dice = self.model.decide_dice_holds(decision_info)
 
+        #TODO clean this up so that we are only using np.arrays. list are too SLOW....
         self.curr_state.append(decision_info)
         self.curr_decisions.append(self.holding_dice)
 
